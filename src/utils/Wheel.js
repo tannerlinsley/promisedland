@@ -1,28 +1,34 @@
 export default {
-  all: [
+  slices: [
     {
-      secret: '123',
-      answer: 'I',
+      secret: 'eye',
+      question: 'What is 2 + 3 ?',
+      answer: '5',
     },
     {
-      secret: '123',
-      answer: 'am ',
+      secret: 'am',
+      question: 'What is 2 + 3 ?',
+      answer: '5',
     },
     {
-      secret: '123',
-      answer: 'a',
+      secret: 'a',
+      question: 'What is 2 + 3 ?',
+      answer: '5',
     },
     {
-      secret: '123',
-      answer: 'child',
+      secret: 'child',
+      question: 'What is 2 + 3 ?',
+      answer: '5',
     },
     {
-      secret: '123',
-      answer: 'of',
+      secret: 'of',
+      question: 'What is 2 + 3 ?',
+      answer: '5',
     },
     {
-      secret: '123',
-      answer: 'God',
+      secret: 'god',
+      question: 'What is 2 + 3 ?',
+      answer: '5',
     },
   ],
   finalSecret: '301',
