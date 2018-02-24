@@ -1,37 +1,37 @@
 export default {
   slices: [
     {
-      secret: 'eye',
+      secret: 'am',
       question: 'What is 2 + 3 ?',
       answer: '5',
       color: '#CD825B',
     },
     {
-      secret: 'am',
+      secret: 'a',
       question: 'What is 2 + 3 ?',
       answer: '5',
       color: '#ECC1A4',
     },
     {
-      secret: 'a',
+      secret: 'child',
       question: 'What is 2 + 3 ?',
       answer: '5',
       color: '#929C7C',
     },
     {
-      secret: 'child',
+      secret: 'of',
       question: 'What is 2 + 3 ?',
       answer: '5',
       color: '#5B9EA6',
     },
     {
-      secret: 'of',
+      secret: 'god',
       question: 'What is 2 + 3 ?',
       answer: '5',
       color: '#5F6146',
     },
     {
-      secret: 'god',
+      secret: 'eye',
       question: 'What is 2 + 3 ?',
       answer: '5',
       color: '#6E4A46',
