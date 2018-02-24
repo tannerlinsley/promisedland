@@ -25,7 +25,7 @@ const swirls = [1, 2, 3, 4, 5, 6].map(
 
 const Styles = styled.div`
   position: absolute;
-  width: 150px;
+  width: 135px;
   height: 100px;
   top: 10px;
   left: 50%;
@@ -34,6 +34,11 @@ const Styles = styled.div`
   pointer-events: none;
   opacity: ${props => (props.stage === 2 ? 1 : offOpacity)};
   animation: ${props => (props.stage !== 2 ? swirls[props.index] : 'none')} infinite 5s linear;
+
+  > .-slice {
+    width: 150px;
+    height: 100px;
+  }
 
   path {
     pointer-events: all;
@@ -56,7 +61,7 @@ const Styles = styled.div`
 
 export default ({ onClick, color, ...rest }) => (
   <Styles {...rest}>
-    <Slice color={color} onClick={onClick} />
+    <Slice class="-slice" color={color} onClick={onClick} />
     <PowerIcon className="power" />
   </Styles>
 )

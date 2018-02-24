@@ -10,8 +10,6 @@ const Styles = styled.svg`
 export default function Slice ({ onClick, ...rest }) {
   return (
     <Styles
-      width="100%"
-      height="100%"
       viewBox="0 0 370 273"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
