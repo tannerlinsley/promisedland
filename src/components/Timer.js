@@ -5,7 +5,7 @@ import RAF from 'raf'
 
 const Styles = styled.div`
   font-family: monospace, sans-serif;
-  font-size: 2rem;
+  font-size: 1.7rem;
   color: rgb(235, 90, 90);
 `
 

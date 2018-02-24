@@ -9,8 +9,8 @@ import WheelSlice from './WheelSlice'
 
 const Styles = styled.div`
   position: relative;
-  width: 300px;
-  height: 300px;
+  width: 275px;
+  height: 275px;
   background: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   margin: 1rem auto;

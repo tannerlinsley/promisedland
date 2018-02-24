@@ -25,8 +25,8 @@ const swirls = [1, 2, 3, 4, 5, 6].map(
 
 const Styles = styled.div`
   position: absolute;
-  width: 135px;
-  height: 100px;
+  width: 120px;
+  height: 75px;
   top: 10px;
   left: 50%;
   transform: translateX(-50%) rotate(${props => props.rotation}deg);
@@ -48,10 +48,11 @@ const Styles = styled.div`
   .power {
     width: 38px;
     position: absolute;
-    top: 25px;
+    top: 20px;
     left: 50%;
     z-index: 1;
     transform: translateX(-50%) rotate(${props => -60 * props.index}deg);
+    pointer-events: none;
 
     path {
       fill: ${props => (props.stage === 2 ? 'white' : 'rgba(0,0,0,.5)')};

@@ -17,12 +17,6 @@ const Styles = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  .askinfaith {
-    position: absolute;
-    left: 0;
-    bottom: 2rem;
-  }
 `
 
 const roomInitialState = {
@@ -182,7 +176,6 @@ class Home extends Component {
           }}
         />
         <AskInFaith
-          className="askinfaith"
           onClick={() =>
             this.setState({
               chatting: true,

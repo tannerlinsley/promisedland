@@ -51,17 +51,20 @@ const SVG = props => (
 
 export default styled(props => <SVG {...props} />)`
   cursor: pointer;
-  width: 150px;
+  width: 130px;
   background: white;
-  padding: 0.5rem 1rem 0.2rem 1.5rem;
+  padding: 0.3rem 0.7rem 0rem 1rem;
   margin-top: 1rem;
-  border-radius: 0 0.5rem 0.5rem 0;
+  border-radius: 0 1rem 0 0;
   z-index: 0;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+  position: absolute;
+  left: 0;
+  bottom: 0;
 
   svg {
-    width: 150px;
-    height: 100px;
+    width: 130px;
+    height: 85px;
   }
 
   path {
