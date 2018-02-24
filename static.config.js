@@ -12,8 +12,9 @@ export default {
     <Html>
       <Head>
         <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         {renderMeta.styleTags}
+        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" />
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js" />
       </Head>
       <Body>{children}</Body>

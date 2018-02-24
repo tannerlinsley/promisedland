@@ -13,6 +13,23 @@ import Room from 'containers/Room'
 
 injectGlobal`
   ${reset};
+
+  html, body {
+    font-family: 'Montserrat', sans-serif;
+    background: radial-gradient(rgb(221, 226, 230) 70%, rgb(162, 179, 184)), #f2f2f2;
+    font-size: 16px;
+    min-height: 100vh;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  * {
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
 `
 
 class App extends Component {
