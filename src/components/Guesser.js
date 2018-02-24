@@ -115,7 +115,7 @@ const Styles = styled.div`
 
 export default ({
   guessingIndex,
-  room,
+  wheel,
   guessingValue,
   guessingError,
   close,
@@ -150,18 +150,18 @@ export default ({
         borderRadius: '100px',
       }}
     >
-      <Styles hasValue={guessingValue} wheelValue={room.wheel[guessingIndex]}>
+      <Styles hasValue={guessingValue} wheelValue={wheel[guessingIndex]}>
         <form
           onSubmit={e => {
             e.preventDefault()
-            const answer = !room.wheel[guessingIndex] ? piece.secret : piece.answer
+            const answer = !wheel[guessingIndex] ? piece.secret : piece.answer
             if (
               guessingValue
                 .split('')
                 .map(d => d.toLowerCase())
                 .join('') === answer
             ) {
-              if (!room.wheel[guessingIndex]) {
+              if (!wheel[guessingIndex]) {
                 approveGuess(1)
                 setGuessingValue('')
               } else {
@@ -180,7 +180,7 @@ export default ({
               <PowerIcon className="power" />
             </div>
             <p className="question">
-              {room.wheel[guessingIndex] ? piece.question : "What's the password?"}
+              {wheel[guessingIndex] ? piece.question : "What's the password?"}
             </p>
             <input
               type="text"
@@ -197,7 +197,7 @@ export default ({
           type="button"
           className="back"
           onClick={() => {
-            if (room.wheel[guessingIndex]) {
+            if (wheel[guessingIndex]) {
               approveGuess(0)
             }
             close()

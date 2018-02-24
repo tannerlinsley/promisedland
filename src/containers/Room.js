@@ -12,6 +12,8 @@ import Guesser from 'components/Guesser'
 import Chat from 'components/Chat'
 import AskInFaith from 'components/AskInFaith'
 import Timer from 'components/Timer'
+import Unlocker from 'components/Unlocker'
+import Congrats from 'components/Congrats'
 
 const Styles = styled.div`
   display: flex;
@@ -19,9 +21,9 @@ const Styles = styled.div`
   align-items: center;
 `
 
-const roomInitialState = {
-  startTime: Date.now(),
-  wheel: [],
+export const getRoomInitialState = () => ({
+  startTime: null,
+  wheel: [0, 0, 0, 0, 0, 0],
   messages: [
     {
       ts: Date.now(),
@@ -29,7 +31,9 @@ const roomInitialState = {
       body: 'What can I help you with?',
     },
   ],
-}
+  unlocked: false,
+  showCongrats: false,
+})
 
 class Home extends Component {
   state = {
@@ -38,7 +42,7 @@ class Home extends Component {
     guessingIndex: 0,
     guessingValue: '',
     guessingError: '',
-    room: roomInitialState,
+    room: getRoomInitialState(),
     username: LocalStorage.get('username') || '',
     usernameInput: '',
     chatting: false,
@@ -66,10 +70,10 @@ class Home extends Component {
         ready: true,
         room: snapshot.val()
           ? {
-            ...roomInitialState,
+            ...getRoomInitialState(),
             ...snapshot.val(),
           }
-          : roomInitialState,
+          : getRoomInitialState(),
       })
     })
   }
@@ -130,6 +134,23 @@ class Home extends Component {
       usernameInput,
     })
   }
+  unlockRoom = () => {
+    this.setRoomState(state => {
+      state.unlocked = Date.now()
+    })
+    setTimeout(
+      () =>
+        this.setRoomState(state => {
+          state.showCongrats = true
+        }),
+      300
+    )
+  }
+  closeUnlocker = () => {
+    this.setState({
+      unlocking: false,
+    })
+  }
   render () {
     const {
       ready,
@@ -146,17 +167,18 @@ class Home extends Component {
       unlocking,
     } = this.state
 
-    const canUnlock = false && room.wheel.length && room.wheel.every(d => d === 2)
+    const { wheel, unlocked, showCongrats, startTime, messages } = room
+    const canUnlock = wheel.length === 6 && wheel.every(d => d === 2)
 
     return (
       <Styles>
         <Loading show={!ready || !readyLoading} />
         <LogoSlim />
-        <Timer time={1000 * 60 * 40} startTime={room.startTime} />
+        <Timer time={1000 * 60 * 40} startTime={startTime} />
         <WheelBackground
-          wheel={room.wheel}
+          wheel={wheel}
           onSliceClick={(piece, i) => {
-            if (!room.wheel[i] || room.wheel[i] < 2) {
+            if (!wheel[i] || wheel[i] < 2) {
               this.setState({
                 guessing: true,
                 guessingIndex: i,
@@ -167,9 +189,9 @@ class Home extends Component {
           }}
           canUnlock={canUnlock}
           onLockClick={() => {
-            // if (!canUnlock) {
-            //   return
-            // }
+            if (!canUnlock) {
+              return
+            }
             this.setState({
               unlocking: true,
             })
@@ -181,11 +203,16 @@ class Home extends Component {
               chatting: true,
             })}
         />
-        {/* <Unlocker show={unlocking} /> */}
+        <Congrats show={showCongrats} />
+        <Unlocker
+          show={!unlocked && unlocking}
+          close={this.closeUnlocker}
+          unlockRoom={this.unlockRoom}
+        />
         <Guesser
-          show={guessing}
+          show={!unlocked && guessing}
           guessingIndex={guessingIndex}
-          room={room}
+          wheel={wheel}
           guessingValue={guessingValue}
           guessingError={guessingError}
           setRoomState={this.setRoomState}
@@ -195,8 +222,8 @@ class Home extends Component {
           setGuessingValue={this.setGuessingValue}
         />
         <Chat
-          show={chatting}
-          messages={room.messages}
+          show={!unlocked && chatting}
+          messages={messages}
           chatInput={chatInput}
           username={username}
           usernameInput={usernameInput}

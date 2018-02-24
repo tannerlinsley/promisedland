@@ -45,9 +45,7 @@ class App extends Component {
             <Route
               render={() => (
                 <div>
-                  <div>
-                    Oh no! We can't find your room number. Did you enter your URL correctly?
-                  </div>
+                  <div>Oh no! Make sure you entered the URL exactly as you see it!</div>
                 </div>
               )}
             />

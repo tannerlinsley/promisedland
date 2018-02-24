@@ -36,13 +36,10 @@ const Styles = styled.div`
   animation: ${props => (props.stage !== 2 ? swirls[props.index] : 'none')} infinite 5s linear;
 
   > .-slice {
-    width: 150px;
-    height: 100px;
-  }
-
-  path {
-    pointer-events: all;
-    cursor: pointer;
+    path {
+      pointer-events: all;
+      cursor: pointer;
+    }
   }
 
   .power {
@@ -62,7 +59,7 @@ const Styles = styled.div`
 
 export default ({ onClick, color, ...rest }) => (
   <Styles {...rest}>
-    <Slice class="-slice" color={color} onClick={onClick} />
+    <Slice className="-slice" color={color} onClick={onClick} />
     <PowerIcon className="power" />
   </Styles>
 )

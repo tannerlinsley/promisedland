@@ -1,3 +1,14 @@
 export default {
-  all: ['alma'],
+  all: [
+    'antiparah',
+    'bethlehem',
+    'cumorah',
+    'damascus',
+    'eden',
+    'farwest',
+    'galilee',
+    'helam',
+    'independence',
+    'jerusalem',
+  ],
 }

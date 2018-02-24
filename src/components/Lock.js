@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
-const SVG = props => (
+export const SVG = props => (
   <svg viewBox="0 0 110 153" version="1.1" xmlns="http://www.w3.org/2000/svg" {...props}>
     <g transform="matrix(1,0,0,1,-607.666,-1177.25)">
       <g transform="matrix(4.16667,0,0,4.16667,0,0)">

@@ -24,7 +24,19 @@ export default class Timer extends React.Component {
     this.stop = true
   }
   render () {
-    const timeLeft = Math.max(this.props.time - (Date.now() - this.props.startTime), 0)
-    return <Styles>{format(timeLeft, 'mm:ss:SS')}</Styles>
+    const { startTime, time, short, finished, ...rest } = this.props
+    const timeLeft = Math.max(time - (Date.now() - startTime), 0)
+    return (
+      <Styles {...rest}>
+        {finished ? (
+          <span>Finished in {format(finished - startTime, 'mm:ss:SS')}</span>
+        ) : (
+          <span>
+            <span>{format(timeLeft, short ? 'mm:ss' : 'mm:ss:SS')}</span>
+            {short && <span> - {Math.round(timeLeft / time * 100)}% Left</span>}
+          </span>
+        )}
+      </Styles>
+    )
   }
 }
