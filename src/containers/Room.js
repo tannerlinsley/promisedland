@@ -174,7 +174,7 @@ class Home extends Component {
       <Styles>
         <Loading show={!ready || !readyLoading} />
         <LogoSlim />
-        <Timer time={1000 * 60 * 40} startTime={startTime} />
+        <Timer time={1000 * 60 * 60} startTime={startTime} />
         <WheelBackground
           wheel={wheel}
           onSliceClick={(piece, i) => {

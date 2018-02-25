@@ -292,7 +292,7 @@ class Home extends Component {
                     {startTime ? (
                       <Timer
                         className="timer"
-                        time={1000 * 60 * 40}
+                        time={1000 * 60 * 60}
                         startTime={startTime}
                         short
                         finished={unlocked}
