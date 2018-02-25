@@ -194,6 +194,32 @@ class Home extends Component {
       })
     })
   }
+  componentWillUpdate (nextProps, nextState) {
+    Rooms.all.forEach(roomName => {
+      if (
+        this.messagesRefs &&
+        this.messagesRefs[roomName] &&
+        this.state[roomName].messages.length !== nextState[roomName].messages.length &&
+        this.messagesRefs[roomName].scrollTop - 15 <=
+          this.messagesRefs[roomName].scrollHeight - this.messagesRefs[roomName].offsetHeight
+      ) {
+        this.messagesRefs[roomName].shouldScroll = true
+      }
+    })
+  }
+  componentDidUpdate (prevProps, prevState) {
+    Rooms.all.forEach(roomName => {
+      if (
+        this.messagesRefs &&
+        this.messagesRefs[roomName] &&
+        this.state[roomName].messages.length !== prevState[roomName].messages.length &&
+        this.messagesRefs[roomName].shouldScroll
+      ) {
+        this.messagesRefs[roomName].shouldScroll = false
+        this.messagesRefs[roomName].scrollTop = 99999
+      }
+    })
+  }
   setRoomState = (roomName, fn) => {
     this.db[roomName].set(immer(this.state[roomName], fn))
   }
@@ -278,7 +304,8 @@ class Home extends Component {
                       <div
                         className="messages"
                         ref={el => {
-                          this.messagesRef = el
+                          this.messagesRefs = this.messagesRefs || {}
+                          this.messagesRefs[roomName] = el
                         }}
                       >
                         <div className="inner">
