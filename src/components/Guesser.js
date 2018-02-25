@@ -154,12 +154,14 @@ export default ({
         <form
           onSubmit={e => {
             e.preventDefault()
-            const answer = !wheel[guessingIndex] ? piece.secret : piece.answer
+            const answer = !wheel[guessingIndex] ? [piece.secret] : piece.answer
             if (
-              guessingValue
-                .split('')
-                .map(d => d.toLowerCase())
-                .join('') === answer
+              answer.includes(
+                guessingValue
+                  .split('')
+                  .map(d => d.toLowerCase())
+                  .join('')
+              )
             ) {
               if (!wheel[guessingIndex]) {
                 approveGuess(1)
