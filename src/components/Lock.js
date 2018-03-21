@@ -16,7 +16,7 @@ const bounce = keyframes`
     transform: translate(-50%, -50%) scale(0.95);
   }
   50% {
-    transform: translate(-50%, -50%) scale(1.05);
+    transform: translate(-50%, -50%) scale(1.1);
   }
 `
 
@@ -27,7 +27,11 @@ const Styles = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  ${props => props.canUnlock && css`animation: ${bounce} 1s infinite linear;`};
+  ${props =>
+    props.canUnlock &&
+    css`
+      animation: ${bounce} 0.6s infinite ease-in-out;
+    `};
 
   path {
     fill: ${props => (props.canUnlock ? 'rgb(94, 191, 150)' : 'rgba(0, 0, 0, 0.2)')};
