@@ -74,12 +74,13 @@ const RoomsStyles = styled.div`
       .messages {
         flex: 1 0 200px;
         border: 2px solid rgba(0, 0, 0, 0.1);
-        border-radius: 0.5rem;
+        border-bottom: 0;
+        border-radius: 0.5rem 0.5rem 0 0;
         padding: 0.5rem;
         text-align: left;
         margin: 0.5rem 0 0;
         align-self: stretch;
-        font-size: 1rem;
+        font-size: 0.8rem;
         line-height: 1.3;
         position: relative;
         overflow-y: scroll;
@@ -91,7 +92,7 @@ const RoomsStyles = styled.div`
       }
 
       .message {
-        margin: 0 0 1rem;
+        margin: 0 0 0.5rem;
 
         .from {
           color: rgb(0, 127, 167);
@@ -117,17 +118,19 @@ const RoomsStyles = styled.div`
       input {
         appearance: none;
         border: 2px solid rgba(0, 0, 0, 0.1);
-        border-radius: 0.5rem;
-        font-size: 1rem;
+        border-bottom: 0;
+        border-radius: 0;
+        font-size: 0.8rem;
         padding: 0.5rem;
         text-align: left;
-        margin: 0.5rem 0rem 0;
+        margin: 0;
         align-self: stretch;
         outline: none;
         transition: all 0.2s ease-out;
 
         :focus {
           border: 2px solid rgba(0, 0, 0, 0.2);
+          border-bottom: 0;
         }
       }
 
@@ -135,12 +138,12 @@ const RoomsStyles = styled.div`
         appearance: none;
         background: ${props => (props.hasChat ? 'rgb(23, 194, 121)' : 'rgb(191, 191, 191)')};
         color: white;
-        font-size: 1rem;
+        font-size: 0.8rem;
         border: 0;
-        padding: 0.5rem 0.2rem;
-        margin: 0.5rem 0 0;
+        padding: 0.3rem 0.2rem;
+        margin: 0;
         align-self: stretch;
-        border-radius: 0.5rem;
+        border-radius: 0 0 0.5rem 0.5rem;
         transition: all 0.2s ease-out;
         outline: 0;
 
@@ -160,6 +163,7 @@ class Home extends Component {
     rooms: {},
     chatInput: {},
     timerChange: {},
+    startChange: {},
   }
   async componentDidMount () {
     this.setState({
@@ -232,6 +236,17 @@ class Home extends Component {
       state.goalTime += 1000 * 60 * Number(amount)
     })
   }
+  addTimeToStartTime = (roomName, amount) => {
+    if (!window.confirm('Are you sure?')) {
+      return
+    }
+    if (!amount) {
+      return
+    }
+    this.setRoomState(roomName, state => {
+      state.startTime += 1000 * 60 * Number(amount)
+    })
+  }
   setRoomState = (roomName, fn) => {
     this.db[roomName].set(immer(this.state[roomName], fn))
   }
@@ -264,6 +279,14 @@ class Home extends Component {
       },
     })
   }
+  setStartChangeInput = (roomName, val) => {
+    this.setState({
+      startChange: {
+        ...this.state.startChange,
+        [roomName]: val,
+      },
+    })
+  }
   sendMessage = (roomName, message) => {
     this.setRoomState(roomName, state => {
       state.messages.push(message)
@@ -287,7 +310,7 @@ class Home extends Component {
     })
   }
   render () {
-    const { password, authed, ready, chatInput, timerChange } = this.state
+    const { password, authed, ready, chatInput, timerChange, startChange } = this.state
 
     if (authed) {
       if (ready) {
@@ -325,25 +348,43 @@ class Home extends Component {
                             </span>
                           ))}
                         </div>
+                        <Timer
+                          className="timer"
+                          time={goalTime}
+                          startTime={startTime}
+                          short
+                          finished={unlocked}
+                        />
+                        <br />
                         <form
                           onSubmit={e => {
                             e.preventDefault()
                             this.addTimeToRoom(roomName, timerChange[roomName])
                           }}
                         >
-                          <Timer
-                            className="timer"
-                            time={goalTime}
-                            startTime={startTime}
-                            short
-                            finished={unlocked}
-                          />
                           <input
                             type="number"
+                            style={{ width: '60px' }}
                             value={timerChange[roomName]}
+                            placeholder="Minutes"
                             onChange={e => this.setTimerChangeInput(roomName, e.target.value)}
                           />
                           <button type="submit">Add Minutes</button>
+                        </form>
+                        <form
+                          onSubmit={e => {
+                            e.preventDefault()
+                            this.addTimeToStartTime(roomName, startChange[roomName])
+                          }}
+                        >
+                          <input
+                            type="number"
+                            style={{ width: '60px' }}
+                            value={startChange[roomName]}
+                            placeholder="Minutes"
+                            onChange={e => this.setStartChangeInput(roomName, e.target.value)}
+                          />
+                          <button type="submit">Adjust Start Time</button>
                         </form>
                         <br />
                         <button type="button" onClick={() => this.resetRoom(roomName)}>
