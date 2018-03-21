@@ -24,7 +24,7 @@ const Styles = styled.div`
 export const getRoomInitialState = () => ({
   goalTime: 1000 * 60 * 90,
   startTime: null,
-  wheel: [1, 1, 1, 1, 1, 1],
+  wheel: [0, 0, 0, 0, 0, 0],
   messages: [
     {
       ts: Date.now(),
