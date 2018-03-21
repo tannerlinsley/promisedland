@@ -3,6 +3,8 @@ import styled, { css, keyframes } from 'styled-components'
 import ReactShow from 'react-show'
 //
 
+import Wheel from 'utils/Wheel'
+
 import Lock from 'components/Lock'
 
 const wiggle = keyframes`
@@ -51,27 +53,37 @@ const Styles = styled.div`
       top: initial;
       transform: none;
       width: 100px;
-      margin-bottom: 4rem;
+      margin-bottom: 2rem;
       path {
         fill: ${props => (props.hasError ? 'rgb(237, 87, 87)' : 'rgb(23, 194, 121)')};
       }
-      ${props => props.hasError && css`animation: ${wiggle} 0.8s;`};
+      ${props =>
+    props.hasError &&
+        css`
+          animation: ${wiggle} 0.6s;
+        `};
     }
 
-    .inputWrap {
-      position: relative;
+    .inputs {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
       margin-bottom: 2rem;
       input {
-        font-size: 4rem;
-        font-family: monospace, sans-serif;
-        width: 200px;
         appearance: none;
-        background: transparent;
-        border: 0;
-        letter-spacing: 16px;
-        padding: 0;
-        margin: 0 0 0 55px;
-        line-height: 80px;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        border-radius: 0.5rem;
+        font-size: 1.2rem;
+        padding: 1rem;
+        text-align: left;
+        margin: 0.5rem 1rem 0;
+        align-self: stretch;
+        outline: none;
+        transition: all 0.2s ease-out;
+
+        :focus {
+          border: 2px solid rgba(0, 0, 0, 0.2);
+        }
       }
 
       > div {
@@ -119,12 +131,12 @@ const Styles = styled.div`
 
 export default class Chat extends React.Component {
   state = {
-    value: '',
+    guesses: Wheel.unlock.answers.map(() => ''),
     error: false,
   }
   render () {
     const { show, close, unlockRoom } = this.props
-    const { value, error } = this.state
+    const { guesses, error } = this.state
     return (
       <ReactShow
         show={show}
@@ -146,7 +158,7 @@ export default class Chat extends React.Component {
         }}
         duration={200}
       >
-        <Styles hasError={error} hasValue={value && value.length === 3}>
+        <Styles hasError={error} hasValue={guesses.every(d => d)}>
           <button
             type="button"
             className="back"
@@ -163,7 +175,16 @@ export default class Chat extends React.Component {
             onSubmit={e => {
               e.preventDefault()
 
-              if (value === '301') {
+              if (
+                Wheel.unlock.answers.every(answer =>
+                  guesses.includes(
+                    answer
+                      .split('')
+                      .map(d => d.toLowerCase())
+                      .join('')
+                  )
+                )
+              ) {
                 unlockRoom()
               } else {
                 this.setState({
@@ -180,20 +201,20 @@ export default class Chat extends React.Component {
             }}
           >
             <Lock className="lock" />
-            <div className="inputWrap">
-              <input
-                type="number"
-                pattern="\d*"
-                value={value}
-                onChange={e => {
-                  let value = e.target.value
-                  value = value.substring(0, 3)
-                  this.setState({
-                    value,
-                  })
-                }}
-              />
-              {[1, 2, 3].map(d => <div key={d} />)}
+            <div className="inputs">
+              {Wheel.unlock.answers.map((answer, i) => (
+                <input
+                  key={answer}
+                  value={guesses[i]}
+                  placeholder={`Keyword ${i + 1}`}
+                  onChange={e => {
+                    const value = e.target.value
+                    this.setState({
+                      guesses: [...guesses.slice(0, i), value, ...guesses.slice(i + 1)],
+                    })
+                  }}
+                />
+              ))}
             </div>
             <button type="submit">Unlock Room</button>
           </form>

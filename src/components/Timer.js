@@ -9,6 +9,8 @@ const Styles = styled.div`
   color: rgb(235, 90, 90);
 `
 
+const getDuration = amount => new Date(2018, 0, 1).getTime() + amount
+
 export default class Timer extends React.Component {
   componentDidMount () {
     const update = () => {
@@ -29,10 +31,10 @@ export default class Timer extends React.Component {
     return (
       <Styles {...rest}>
         {finished ? (
-          <span>Finished in {format(finished - startTime, 'mm:ss:SS')}</span>
+          <span>Finished in {format(getDuration(finished - startTime), 'H:mm:ss:SS')}</span>
         ) : (
           <span>
-            <span>{format(timeLeft, short ? 'mm:ss' : 'mm:ss:SS')}</span>
+            <span>{format(getDuration(timeLeft), short ? 'H:mm:ss' : 'H:mm:ss:SS')}</span>
             {short && <span> - {Math.round(timeLeft / time * 100)}% Left</span>}
           </span>
         )}

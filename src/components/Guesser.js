@@ -5,7 +5,7 @@ import ReactShow from 'react-show'
 import Wheel from 'utils/Wheel'
 
 import Slice from 'components/Slice'
-import PowerIcon from 'components/PowerIcon'
+import QuestionIcon from 'components/QuestionIcon'
 
 const Styles = styled.div`
   height: 100%;
@@ -39,15 +39,15 @@ const Styles = styled.div`
         margin-bottom: 2rem;
       }
 
-      .power {
+      .icon {
         position: absolute;
         top: 70px;
-        left: 51%;
+        left: 50%;
         width: 50px;
         transform: translateX(-50%) scale(${props => (!props.wheelValue ? '0.9' : '1.3')});
         transition: all 0.5s ease-out;
         path {
-          fill: ${props => (!props.wheelValue ? 'rgba(0,0,0,.3)' : 'white')};
+          fill: white;
           transition: all 0.5s ease-out;
         }
       }
@@ -65,7 +65,7 @@ const Styles = styled.div`
         font-size: 2rem;
         padding: 0.5rem;
         text-align: center;
-        margin: 0.5rem;
+        margin: 0.5rem 1rem;
         align-self: stretch;
         outline: none;
         transition: all 0.2s ease-out;
@@ -82,7 +82,7 @@ const Styles = styled.div`
         font-size: 1.5rem;
         border: 0;
         padding: 1rem 0.5rem;
-        margin: 0.5rem;
+        margin: 0.5rem 1rem;
         align-self: stretch;
         border-radius: 0.5rem;
         transition: all 0.2s ease-out;
@@ -154,9 +154,8 @@ export default ({
         <form
           onSubmit={e => {
             e.preventDefault()
-            const answer = !wheel[guessingIndex] ? [piece.secret] : piece.answer
             if (
-              answer.includes(
+              piece.secret.includes(
                 guessingValue
                   .split('')
                   .map(d => d.toLowerCase())
@@ -165,9 +164,6 @@ export default ({
             ) {
               if (!wheel[guessingIndex]) {
                 approveGuess(1)
-                setGuessingValue('')
-              } else {
-                approveGuess(2)
                 close()
               }
             } else {
@@ -179,11 +175,8 @@ export default ({
           <div>
             <div className="slice-wrapper">
               <Slice className="slice" color={piece.color} />
-              <PowerIcon className="power" />
+              <QuestionIcon className="icon" />
             </div>
-            <p className="question">
-              {wheel[guessingIndex] ? piece.question : "What's the password?"}
-            </p>
             <input
               type="text"
               value={guessingValue}

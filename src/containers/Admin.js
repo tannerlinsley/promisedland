@@ -28,7 +28,7 @@ const RoomsStyles = styled.div`
 
     .green,
     .red {
-      font-size: 1.2rem;
+      font-size: 0.9rem;
       display: inline-block;
       margin: 2px;
       padding: 2px 5px;
@@ -159,6 +159,7 @@ class Home extends Component {
     ready: false,
     rooms: {},
     chatInput: {},
+    timerChange: {},
   }
   async componentDidMount () {
     this.setState({
@@ -220,6 +221,17 @@ class Home extends Component {
       }
     })
   }
+  addTimeToRoom = (roomName, amount) => {
+    if (!window.confirm('Are you sure?')) {
+      return
+    }
+    if (!amount) {
+      return
+    }
+    this.setRoomState(roomName, state => {
+      state.goalTime += 1000 * 60 * Number(amount)
+    })
+  }
   setRoomState = (roomName, fn) => {
     this.db[roomName].set(immer(this.state[roomName], fn))
   }
@@ -244,6 +256,14 @@ class Home extends Component {
       },
     })
   }
+  setTimerChangeInput = (roomName, val) => {
+    this.setState({
+      timerChange: {
+        ...this.state.timerChange,
+        [roomName]: val,
+      },
+    })
+  }
   sendMessage = (roomName, message) => {
     this.setRoomState(roomName, state => {
       state.messages.push(message)
@@ -254,8 +274,20 @@ class Home extends Component {
       state.startTime = Date.now()
     })
   }
+  resetRoom = roomName => {
+    if (!window.confirm('Are you sure?')) {
+      return
+    }
+
+    this.setRoomState(roomName, state => {
+      const newState = getRoomInitialState()
+      Object.keys(newState).forEach(key => {
+        state[key] = newState[key]
+      })
+    })
+  }
   render () {
-    const { password, authed, ready, chatInput } = this.state
+    const { password, authed, ready, chatInput, timerChange } = this.state
 
     if (authed) {
       if (ready) {
@@ -273,72 +305,91 @@ class Home extends Component {
             <RoomsStyles>
               {Rooms.all.map(roomName => {
                 const room = this.state[roomName]
-                const { messages, startTime, unlocked } = room
+                const { messages, startTime, goalTime, unlocked } = room
                 return (
                   <div key={roomName} className="room">
                     <h1>{roomName}</h1>
-                    {unlocked ? (
-                      <div className="green">Unlocked</div>
+                    {!startTime ? (
+                      <button onClick={() => this.startRoom(roomName)}>Start Room</button>
                     ) : (
-                      <div className="red">Locked</div>
-                    )}
-                    <div className="progress">
-                      {room.wheel.map((val, i) => (
-                        <span key={i} className={val === 2 ? 'green' : 'red'}>
-                          {Wheel.slices[i].secret}{' '}
-                        </span>
-                      ))}
-                    </div>
-                    {startTime ? (
-                      <Timer
-                        className="timer"
-                        time={1000 * 60 * 60}
-                        startTime={startTime}
-                        short
-                        finished={unlocked}
-                      />
-                    ) : (
-                      <button onClick={() => this.startRoom(roomName)}>Start Timer</button>
-                    )}
-                    <div className="chat">
-                      <div
-                        className="messages"
-                        ref={el => {
-                          this.messagesRefs = this.messagesRefs || {}
-                          this.messagesRefs[roomName] = el
-                        }}
-                      >
-                        <div className="inner">
-                          {messages.map(message => (
-                            <div key={message.ts} className="message">
-                              <div className="from">{message.from}</div>
-                              <div className="message-body">{message.body}</div>
-                            </div>
+                      <div>
+                        {unlocked ? (
+                          <div className="green">Unlocked</div>
+                        ) : (
+                          <div className="red">Locked</div>
+                        )}
+                        <div className="progress">
+                          {room.wheel.map((val, i) => (
+                            <span key={i} className={val ? 'green' : 'red'}>
+                              {Wheel.slices[i].label}{' '}
+                            </span>
                           ))}
                         </div>
+                        <form
+                          onSubmit={e => {
+                            e.preventDefault()
+                            this.addTimeToRoom(roomName, timerChange[roomName])
+                          }}
+                        >
+                          <Timer
+                            className="timer"
+                            time={goalTime}
+                            startTime={startTime}
+                            short
+                            finished={unlocked}
+                          />
+                          <input
+                            type="number"
+                            value={timerChange[roomName]}
+                            onChange={e => this.setTimerChangeInput(roomName, e.target.value)}
+                          />
+                          <button type="submit">Add Minutes</button>
+                        </form>
+                        <br />
+                        <button type="button" onClick={() => this.resetRoom(roomName)}>
+                          Reset Room
+                        </button>
+                        <div className="chat">
+                          <div
+                            className="messages"
+                            ref={el => {
+                              this.messagesRefs = this.messagesRefs || {}
+                              this.messagesRefs[roomName] = el
+                            }}
+                          >
+                            <div className="inner">
+                              {messages.map(message => (
+                                <div key={message.ts} className="message">
+                                  <div className="from">{message.from}</div>
+                                  <div className="message-body">{message.body}</div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <form
+                            onSubmit={e => {
+                              e.preventDefault()
+                              if (chatInput[roomName]) {
+                                this.sendMessage(roomName, {
+                                  from: 'Revalation',
+                                  ts: Date.now(),
+                                  body: chatInput[roomName],
+                                })
+                                this.setChatInput(roomName, '')
+                              }
+                            }}
+                          >
+                            <input
+                              type="text"
+                              placeholder="Your message..."
+                              value={chatInput[roomName]}
+                              onChange={e => this.setChatInput(roomName, e.target.value)}
+                            />
+                            <button type="submit">Send</button>
+                          </form>
+                        </div>
                       </div>
-                      <form
-                        onSubmit={e => {
-                          e.preventDefault()
-                          if (chatInput[roomName]) {
-                            this.sendMessage(roomName, {
-                              from: 'Revalation',
-                              ts: Date.now(),
-                              body: chatInput[roomName],
-                            })
-                            this.setChatInput(roomName, '')
-                          }
-                        }}
-                      >
-                        <input
-                          type="text"
-                          placeholder="Your message..."
-                          value={chatInput[roomName]}
-                          onChange={e => this.setChatInput(roomName, e.target.value)}
-                        />
-                        <button type="submit">Send</button>
-                      </form>
-                    </div>
+                    )}
                   </div>
                 )
               })}
@@ -352,7 +403,7 @@ class Home extends Component {
       <form
         onSubmit={e => {
           e.preventDefault()
-          if (password === 'he has sent me here') {
+          if (password === 'supersecret') {
             window.localStorage.authed = true
             this.setState({
               authed: true,

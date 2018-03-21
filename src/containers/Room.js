@@ -22,8 +22,9 @@ const Styles = styled.div`
 `
 
 export const getRoomInitialState = () => ({
+  goalTime: 1000 * 60 * 90,
   startTime: null,
-  wheel: [0, 0, 0, 0, 0, 0],
+  wheel: [1, 1, 1, 1, 1, 1],
   messages: [
     {
       ts: Date.now(),
@@ -167,18 +168,18 @@ class Home extends Component {
       unlocking,
     } = this.state
 
-    const { wheel, unlocked, showCongrats, startTime, messages } = room
-    const canUnlock = wheel.length === 6 && wheel.every(d => d === 2)
+    const { wheel, unlocked, showCongrats, startTime, goalTime, messages } = room
+    const canUnlock = wheel.length === 6 && wheel.every(Boolean)
 
     return (
       <Styles>
         <Loading show={!ready || !readyLoading} />
         <LogoSlim />
-        <Timer time={1000 * 60 * 60} startTime={startTime} />
+        <Timer time={goalTime} startTime={startTime} />
         <WheelBackground
           wheel={wheel}
           onSliceClick={(piece, i) => {
-            if (!wheel[i] || wheel[i] < 2) {
+            if (!wheel[i]) {
               this.setState({
                 guessing: true,
                 guessingIndex: i,
@@ -201,7 +202,8 @@ class Home extends Component {
           onClick={() =>
             this.setState({
               chatting: true,
-            })}
+            })
+          }
         />
         <Congrats show={showCongrats} />
         <Unlocker

@@ -30,9 +30,7 @@ export default ({ wheel, onSliceClick, onLockClick, canUnlock, ...rest }) => (
         onClick={() => onSliceClick(piece, i)}
         stage={wheel[i]}
         index={i}
-      >
-        Piece {i + 1} : {wheel[i] || 0} / 2
-      </WheelSlice>
+      />
     ))}
     <Lock canUnlock={canUnlock} onClick={onLockClick} />
   </Styles>
