@@ -177,11 +177,13 @@ export default class Chat extends React.Component {
 
               if (
                 Wheel.unlock.answers.every(answer =>
-                  guesses.includes(
-                    answer
-                      .split('')
-                      .map(d => d.toLowerCase())
-                      .join('')
+                  guesses.find(
+                    guess =>
+                      answer ===
+                      guess
+                        .split('')
+                        .map(d => d.toLowerCase())
+                        .join('')
                   )
                 )
               ) {
