@@ -155,11 +155,16 @@ export default ({
           onSubmit={e => {
             e.preventDefault()
             if (
-              piece.secret.includes(
-                guessingValue
-                  .split('')
-                  .map(d => d.toLowerCase())
-                  .join('')
+              piece.secret.find(
+                secret =>
+                  secret
+                    .split('')
+                    .map(d => d.toLowerCase())
+                    .join('') ===
+                  guessingValue
+                    .split('')
+                    .map(d => d.toLowerCase())
+                    .join('')
               )
             ) {
               if (!wheel[guessingIndex]) {
