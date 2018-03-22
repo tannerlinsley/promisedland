@@ -83,7 +83,7 @@ export default class Chat extends React.Component {
       >
         <Styles hasError={error} hasValue={value && value.length === 3}>
           <img alt="" src="/img/logo.svg" />
-          <h1>Power Restored!</h1>
+          <h1>Congratulations!</h1>
           <p>The room is now unlocked and you may now exit!</p>
         </Styles>
       </ReactShow>
