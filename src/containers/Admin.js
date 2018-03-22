@@ -412,7 +412,7 @@ class Home extends Component {
                               e.preventDefault()
                               if (chatInput[roomName]) {
                                 this.sendMessage(roomName, {
-                                  from: 'Revalation',
+                                  from: 'Revelation',
                                   ts: Date.now(),
                                   body: chatInput[roomName],
                                 })
